@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cupid Meters</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            cofamily: 'Courier New', Courier, monospace;
+            background: linear-gradient(135deg, #f06, #f93);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-image: url('https://pomf2.lain.la/f/6gvei52.jpg'); /* Default background color */
+            background-size: cover;
+            background-position: center;
+            transition: background-image 0.3s ease;
+        }
+
+        header {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        #changeBackgroundBtn {
+            position: absolute;
+            top: 16px;
+            left: 10px;
+            font-size: 1.5em;
+            background-color: #FFFFFF;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #meter {
+            background-color: rgba(255, 255, 255, 0.2);
+            bordeus: 10px;
+            padding: 30px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        #meter h2 {
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-size: 1.2em;
+        }
+
+        input[type="text"], input[type="file"] {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #ff5733;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #ff3300;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 1.5em;
+        }
+
+        footer {
+            background-color: rgba(0, 0, 0, 0.7);
+            text-align: center;
+            padding: 10px;
+        }
+
+        /* Animasi loading seperti terminal */
+        .loading-text {
+            overflow: hidden;
+            white-space: nowrap;
+            margin-top: 10px;
+            font-size: 1.2em;
+            color: rgba(255, 255, 255, 0.8);
+            border-right: .15em solid orange;
+            animation: loading 1s steps(15, end) infinite;
+        }
+
+        @keyframes loading {
+            0% {
+                width: 0;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Cupid Meters</h1>
+        <button id="changeBackgroundBtn">🖼</button>
+    </header>
+    <main>
+        <section id="meter">
+            <h2>Find Your Compatibility</h2>
+            <form id="cupidForm">
+                <label for="name1">Your Name:</label>
+                <input type="text" id="name1" name="name1" required>
+                <label for="name2">Partner's Name:</label>
+                <input type="text" id="name2" name="name2" required>
+                <label for="selfie">Upload a selfie of yourself or with your partner:</label>
+                <input type="file" id="selfie" name="selfie" accept="image/*" required>
+                <button type="submit" id="checkCompatibility">Check Compatibility</button>
+            </form>
+            <div id="loading" style="display: none;">
+                <div class="loading-text"> Reading images...</div>
+            </div>
+            <div id="result"></div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Cupid Meters. All rights reserved.</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const storedBackground = localStorage.getItem('background');
+            if (storedBackground) {
+                document.body.style.backgroundImage = `url('${storedBackground}')`;
+            }
+
+            document.getElementById('changeBackgroundBtn').addEventListener('click', function() {
+                Swal.fire({
+                    title: 'Choose Background Image',
+                    input: 'file',
+                    inputAttributes: {
+                        accept: 'image/*',
+                        'aria-label': 'Upload your background image'
+                    },
+                    confirmButtonText: 'Set Background',
+                    showCancelButton: true,
+                    showLoaderOnConfirm: true,
+                    preConfirm: (file) => {
+                        return new Promise((resolve) => {
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                                const imageUrl = e.target.result;
+                                document.body.style.backgroundImage = `url('${imageUrl}')`;
+                                localStorage.setItem('background', imageUrl);
+                                resolve();
+                            };
+                            reader.readAsDataURL(file);
+                        });
+                    }
+                });
+            });
+
+            document.getElementById('cupidForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                const name1 = document.getElementById('name1').value;
+                const name2 = document.getElementById('name2').value;
+                const selfie = document.getElementById('selfie').files[0];
+
+                if (name1 && name2 && selfie) {
+                    // Show loading animation for 5 seconds
+                    document.getElementById('loading').style.display = 'block';
+                    setTimeout(function() {
+                        const compatibility = Math.floor(Math.random() * 100) + 1;
+                        document.getElementById('result').innerText = `${name1} and ${name2} are ${compatibility}% compatible!`;
+                        document.getElementById('loading').style.display = 'none';
+                    }, 5000); // 5000 milliseconds = 5 seconds
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Please fill all fields and upload a selfie!',
+                        confirmButtonColor: '#ff5733',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+  </html>
