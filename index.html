@@ -240,14 +240,14 @@
 
 document.getElementById('saweriaBtn').addEventListener('click', function() {
     Swal.fire({
-        title: 'Pergi ke Saweria?',
-        text: 'Anda akan diarahkan ke halaman Saweria.',
-        icon: 'warning',
+        title: 'Donate to Saweria?',
+        text: 'Do you want to donate a little of your money through saweria?',
+        icon: 'question',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Ya, lanjutkan!',
-        cancelButtonText: 'Batal'
+        confirmButtonText: 'donate',
+        cancelButtonText: 'No, thank you'
     }).then((result) => {
         if (result.isConfirmed) {
             window.location.href = 'https://saweria.co/remilio';
