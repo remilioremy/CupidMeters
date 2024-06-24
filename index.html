@@ -13,24 +13,30 @@
         }
 
         body {
-            cofamily: 'Courier New', Courier, monospace;
+            font-family: 'Courier New', Courier, monospace;
             background: linear-gradient(135deg, #f06, #f93);
             color: #fff;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            background-image: url('https://pomf2.lain.la/f/6gvei52.jpg'); /* Default background color */
+            background-image: url('https://pomf2.lain.la/f/6gvei52.jpg'); /* defaul background */
             background-size: cover;
             background-position: center;
             transition: background-image 0.3s ease;
+            border-radius: 20px;
+            overflow: auto;
         }
 
         header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
             background-color: rgba(0, 0, 0, 0.7);
-            padding: 20px;
+            padding: 10px;
             text-align: center;
-            position: relative;
-            z-index: 1;
+            border-top-left-radius: 0px;
+            border-top-right-radius: 0px;
+            backdrop-filter: blur(20px);
         }
 
         header h1 {
@@ -39,27 +45,40 @@
         }
 
         #changeBackgroundBtn {
-            position: absolute;
-            top: 16px;
+            position: fixed;
+            top: 11px;
             left: 10px;
             font-size: 1.5em;
             background-color: #FFFFFF;
             border: none;
             color: #fff;
             cursor: pointer;
-            z-index: 2;
+            z-index: 1000;
         }
+
+        #saweriaBtn {
+            position: fixed;
+            top: 11px;
+            left: 370px;
+            font-size: 1.5em;
+            background-color: #FFFFFF;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            z-index: 1000;
+        }        
 
         main {
             flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
         }
 
         #meter {
             background-color: rgba(255, 255, 255, 0.2);
-            bordeus: 10px;
+            border-radius: 20px;
             padding: 30px;
             text-align: center;
             max-width: 400px;
@@ -81,16 +100,17 @@
             font-size: 1.2em;
         }
 
-        input[type="text"], input[type="file"] {
+        input[type="text"], input[type="file"], select {
             padding: 10px;
-            border: none;
+            border: 2px solid #000000;
             border-radius: 5px;
             font-size: 1em;
+            outline: none;
         }
 
         button {
             padding: 10px;
-            background-color: #ff5733;
+            background-color: #000000;
             color: white;
             border: none;
             border-radius: 5px;
@@ -100,7 +120,7 @@
         }
 
         button:hover {
-            background-color: #ff3300;
+            background-color: #00000050;
         }
 
         #result {
@@ -109,20 +129,29 @@
         }
 
         footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
             background-color: rgba(0, 0, 0, 0.7);
             text-align: center;
             padding: 10px;
-        }
+            border-bottom-left-radius: 0px;  
+            border-bottom-right-radius: 0px;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+}
 
         /* Animasi loading seperti terminal */
         .loading-text {
-            overflow: hidden;
-            white-space: nowrap;
+            overflow: hidden; /* Agar teks animasi tetap dalam kontainer */
+            white-space: nowrap; /* Mencegah teks pindah baris */
             margin-top: 10px;
             font-size: 1.2em;
             color: rgba(255, 255, 255, 0.8);
-            border-right: .15em solid orange;
-            animation: loading 1s steps(15, end) infinite;
+            border: .15em solid orange; /* Garis imitasi kursor */
+            border-radius: 5px; /* Rounded border */
+            padding: 5px; /* Add padding */
+            animation: loading 1s steps(15, end) infinite; /* Steps menentukan jumlah karakter di animasi */
         }
 
         @keyframes loading {
@@ -139,27 +168,41 @@
     <header>
         <h1>Cupid Meters</h1>
         <button id="changeBackgroundBtn">🖼</button>
+        <button id="saweriaBtn">🪙</button>   
     </header>
     <main>
         <section id="meter">
-            <h2>Find Your Compatibility</h2>
+            <h2> Determine your compatibility</h2>
             <form id="cupidForm">
-                <label for="name1">Your Name:</label>
+                <label for="name1">Nama Anda:</label>
                 <input type="text" id="name1" name="name1" required>
-                <label for="name2">Partner's Name:</label>
+                <label for="name2">Nama Pasangan:</label>
                 <input type="text" id="name2" name="name2" required>
-                <label for="selfie">Upload a selfie of yourself or with your partner:</label>
+                <label for="status">Status Saat Ini:</label>
+                <select id="status" name="status" required>
+                    <option value="">Pilih status Anda</option>
+                    <option value="SD/MI">Pelajar SD/MI</option>
+                    <option value="SMP/MTs">Pelajar SMP/MTs</option>
+                    <option value="SMA/MA">Pelajar SMA/MA</option>
+                    <option value="Kuliah">Mahasiswa Kuliah</option>
+                    <option value="Lainnya">Lainnya</option>
+                </select>
+                <label for="birthdate">Tanggal Lahir Anda:</label>
+                <input type="text" id="birthdate" name="birthdate" readonly required>
+                <label for="dateStarted">Tanggal Jadian:</label>
+                <input type="text" id="dateStarted" name="dateStarted" readonly required>
+                <label for="selfie">Unggah foto selfie Anda atau bersama pasangan:</label>
                 <input type="file" id="selfie" name="selfie" accept="image/*" required>
-                <button type="submit" id="checkCompatibility">Check Compatibility</button>
+                <button type="submit" id="checkCompatibility">Start</button>
             </form>
             <div id="loading" style="display: none;">
-                <div class="loading-text"> Reading images...</div>
+                <div class="loading-text">Membaca gambar...</div>
             </div>
             <div id="result"></div>
         </section>
     </main>
     <footer>
-        <p>&copy; 2024 Cupid Meters. All rights reserved.</p>
+        <p>&copy; 2024 Cupid Meters • @RemilioRemy</p>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script>
@@ -171,13 +214,13 @@
 
             document.getElementById('changeBackgroundBtn').addEventListener('click', function() {
                 Swal.fire({
-                    title: 'Choose Background Image',
+                    title: 'Change background',
                     input: 'file',
                     inputAttributes: {
                         accept: 'image/*',
-                        'aria-label': 'Upload your background image'
+                        'aria-label': 'upload image to be used as background'
                     },
-                    confirmButtonText: 'Set Background',
+                    confirmButtonText: 'Set up the background',
                     showCancelButton: true,
                     showLoaderOnConfirm: true,
                     preConfirm: (file) => {
@@ -195,32 +238,79 @@
                 });
             });
 
+document.getElementById('saweriaBtn').addEventListener('click', function() {
+    Swal.fire({
+        title: 'Pergi ke Saweria?',
+        text: 'Anda akan diarahkan ke halaman Saweria.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, lanjutkan!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = 'https://saweria.co/remilio';
+        }
+    });
+});
             document.getElementById('cupidForm').addEventListener('submit', function(event) {
                 event.preventDefault();
                 
                 const name1 = document.getElementById('name1').value;
                 const name2 = document.getElementById('name2').value;
+                const status = document.getElementById('status').value;
+                const birthdate = document.getElementById('birthdate').value;
+                const dateStarted = document.getElementById('dateStarted').value;
                 const selfie = document.getElementById('selfie').files[0];
 
-                if (name1 && name2 && selfie) {
+                if (name1 && name2 && status && birthdate && dateStarted && selfie) {
                     // Show loading animation for 5 seconds
                     document.getElementById('loading').style.display = 'block';
                     setTimeout(function() {
                         const compatibility = Math.floor(Math.random() * 100) + 1;
-                        document.getElementById('result').innerText = `${name1} and ${name2} are ${compatibility}% compatible!`;
+                        document.getElementById('result').innerText = `${name1} dan ${name2} memiliki tingkat kecocokan ${compatibility}%!`;
                         document.getElementById('loading').style.display = 'none';
                     }, 5000); // 5000 milliseconds = 5 seconds
                 } else {
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        text: 'Please fill all fields and upload a selfie!',
+                        text: 'Harap isi semua format yang ada!',
                         confirmButtonColor: '#ff5733',
                         confirmButtonText: 'OK'
                     });
                 }
             });
+
+            // Date picker for birthdate
+            document.getElementById('birthdate').addEventListener('click', function() {
+                Swal.fire({
+                    title: 'Pilih Tanggal Lahir',
+                    html: '<input type="date" id="birthdatePicker" class="swal2-input">',
+                    confirmButtonText: 'Pilih',
+                    showCancelButton: true,
+                    preConfirm: () => {
+                        const birthdate = document.getElementById('birthdatePicker').value;
+                        document.getElementById('birthdate').value = birthdate;
+                    }
+                });
+            });
+
+            // Date picker for date started
+            document.getElementById('dateStarted').addEventListener('click', function() {
+                Swal.fire({
+                    title: 'Pilih Tanggal Jadian',
+                    html: '<input type="date" id="dateStartedPicker" class="swal2-input">',
+                    confirmButtonText: 'Pilih',
+                    showCancelButton: true,
+                    preConfirm: () => {
+                        const dateStarted = document.getElementById('dateStartedPicker').value;
+                        document.getElementById('dateStarted').value = dateStarted;
+                    }
+                });
+            });
         });
     </script>
 </body>
-  </html>
+</html>
